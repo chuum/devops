@@ -48,4 +48,4 @@ RUN set -eux; \
 EXPOSE 8084
 
 # 需要运行的命令
-#ENTRYPOINT ["/bluebell_app", "conf/config.yaml"]
+ENTRYPOINT ["/bluebell_app", "conf/config.yaml"]
