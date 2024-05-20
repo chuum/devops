@@ -12,6 +12,7 @@ WORKDIR /build
 # 复制项目中的 go.mod 和 go.sum文件并下载依赖信息
 COPY go.mod .
 COPY go.sum .
+RUN go env -w GOPROXY=https://goproxy.cn,direct
 RUN go mod download
 
 # 将代码复制到容器中
@@ -23,7 +24,8 @@ RUN go build -o bluebell_app .
 ###################
 # 接下来创建一个小镜像
 ###################
-FROM debian:stretch-slim
+#FROM debian:stretch-slim
+FROM centos:7
 
 COPY ./wait-for.sh /
 COPY ./templates /templates
@@ -34,10 +36,12 @@ COPY ./conf /conf
 COPY --from=builder /build/bluebell_app /
 
 RUN set -eux; \
-	apt-get update; \
-	apt-get install -y \
-		--no-install-recommends \
-		netcat; \
+#	apt-get update; \
+#	apt-get install -y \
+#		--no-install-recommends \
+#		netcat; \
+    yum -y update; \
+    yum -y install nc; \
         chmod 755 wait-for.sh
 
 # 声明服务端口
