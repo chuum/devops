@@ -54,5 +54,11 @@ pipeline {
             cleanWs() // 清理工作空间
             echo 'Pipeline completed'
         }
+        failure {
+            emaile extrecipients: 'your-email@example.com',
+                subject: 'Jenkins Job Failure: ${JOB_NAME}#${BUILD_NUMBER}',
+                body: "Check console output at ${env.BUILD_URL} for details."
+        }
     }
+}
 }
