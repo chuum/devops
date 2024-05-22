@@ -12,15 +12,17 @@ pipeline {
         stage('拉取代码') {
             steps {
                 git branch: 'main', url: 'https://github.com/chuum/devops.git'
-
+                echo "1"
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
+                    echo "2"
 //                     def dockerImage = docker.build("test-devops1/devops:${env.BUILD_ID}")
                         sh "docker build -t test1:v1 ."
+                    echo "3"
                 }
             }
         }
