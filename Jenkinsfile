@@ -1,7 +1,7 @@
 
 pipeline {
     agent any
-
+    agent any options { enablementMode: 'always' }
     environment {
         REGISTRY_URL = 'registry.cn-hangzhou.aliyuncs.com/test-devops1/devops'
         REGISTRY_USERNAME = credentials('aliyun1489854349')
