@@ -1,57 +1,59 @@
-
 pipeline {
     agent any
-    options { enablementMode: 'always' }
+
     environment {
-        REGISTRY_URL = 'registry.cn-hangzhou.aliyuncs.com/test-devops1/devops'
-        REGISTRY_USERNAME = credentials('aliyun1489854349')
-        REGISTRY_PASSWORD = credentials('qing@aliyun2')
+        // ACR相关信息
+        REGISTRY_URL = 'registry.cn-hangzhou.aliyuncs.com/test-devops1'
+        REGISTRY_REPO_NAME = 'devops'
+        REGISTRY_USERNAME = credentials('your-registry-credential-id') // 替换为您的ACR凭据ID
+        REGISTRY_PASSWORD = credentials('your-registry-secret') // 替换为您的ACR凭据密钥
+        IMAGE_NAME = "${REGISTRY_REPO_NAME}/${REGISTRY_REPO_NAME}"
+
+        // Kubernetes配置
+        KUBECONFIG_PATH = '/var/jenkins/kubeconfig' // 或者省略此行如果Jenkins在集群内
     }
 
     stages {
-        stage('拉取代码kmklmkl') {
+        stage('拉取代码') {
             steps {
                 git branch: 'main', url: 'https://github.com/chuum/devops.git'
             }
         }
 
-        stage('Build Docker Imagehjghj') {
+        stage('构建Docker镜像') {
             steps {
                 script {
-                    sh "docker build -t test-devops:v1 ."
+                    def customImage = docker.build("${IMAGE_NAME}:latest")
+                    customImage.push()
                 }
             }
         }
 
-        stage('Push Docker Image to ACR') {
+        stage('部署到Kubernetes') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'acr-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                        docker.withRegistry("${REGISTRY_URL}", "${USERNAME}", "${PASSWORD}") {
-                            sh "docker tag test-devops:v1 ${REGISTRY_URL}:v1"
-                            sh "docker push ${REGISTRY_URL}:v1"
+                    if (fileExists(KUBECONFIG_PATH)) {
+                        withEnv(["KUBECONFIG=${UBECONFIG_PATH}"]) {
+                            sh """
+                                kubectl apply -f kubernetes/deployment.yaml
+                                kubectl rollout status deployment/${DEPLOYMENT_NAME} --watch=true
+                            """
                         }
+                    } else {
+                        error "kubeconfig file not found at ${UBECONFIG_PATH}. Please configure properly."
                     }
                 }
             }
         }
+    }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                container('kubectl') {
-                    sh 'kubectl apply -f application/deployment.yaml'
-                }
-            }
-        }
     }
 
     post {
-        success {
-            echo 'Deployment successful!'
-        }
-        failure {
-            echo 'Deployment failed :('
-//             emailext body: 'The job has failed. Check console output at ${BUILD_URL} for more details.', subject: 'Job Failed', to: 'your-email@example.com'
+        always {
+            cleanWs() // 清理工作空间
+            echo 'Pipeline completed'
         }
     }
+}
 }
