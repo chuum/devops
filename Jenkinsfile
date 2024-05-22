@@ -5,6 +5,9 @@ pipeline {
         REGISTRY_URL = 'registry.cn-hangzhou.aliyuncs.com/test-devops1/devops'
         REGISTRY_USERNAME = credentials('aliyun1489854349')
         REGISTRY_PASSWORD = credentials('qing@aliyun2')
+
+       REGISTRY_USERNAME = credentials('aliyun1489854349').username
+       REGISTRY_PASSWORD = credentials('qing@aliyun2').password
 //         KUBECONFIG_PATH = '/path/to/your/kubeconfig' // 如果Jenkins运行在K8s集群内，可能不需要这行
     }
 
@@ -21,7 +24,7 @@ pipeline {
                 script {
                     echo "2"
 //                     def dockerImage = docker.build("test-devops1/devops:${env.BUILD_ID}")
-                        sh "docker build -t test1:v1 ."
+                        sh "docker build -t  ${REGISTRY}/${IMAGE}:${env.BUILD_ID} ."
                     echo "3"
                 }
             }
@@ -48,14 +51,14 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            echo 'Deployment successful!'
-        }
-//         failure {
-//             echo 'Deployment failed :('
-//             emailext body: 'The job has failed. Check console output at ${BUILD_URL} for more details.', subject: 'Job Failed', to: 'your-email@example.com'
+//     post {
+//         success {
+//             echo 'Deployment successful!'
 //         }
-    }
-}
+// //         failure {
+// //             echo 'Deployment failed :('
+// //             emailext body: 'The job has failed. Check console output at ${BUILD_URL} for more details.', subject: 'Job Failed', to: 'your-email@example.com'
+// //         }
+//     }
+// }
 
