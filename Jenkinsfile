@@ -51,7 +51,7 @@ pipeline {
         }
         failure {
             echo 'Deployment failed :('
-            emailext body: 'The job has failed. Check console output at ${BUILD_URL} for more details.', subject: 'Job Failed', to: 'your-email@example.com'
+//             emailext body: 'The job has failed. Check console output at ${BUILD_URL} for more details.', subject: 'Job Failed', to: 'your-email@example.com'
         }
     }
 }
