@@ -9,7 +9,7 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('拉取代码') {
             steps {
                 git branch: 'main', url: 'https://github.com/chuum/devops.git'
 
@@ -19,7 +19,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def dockerImage = docker.build("test-devops1/devops:${env.BUILD_ID}")
+//                     def dockerImage = docker.build("test-devops1/devops:${env.BUILD_ID}")
+                        sh "docker build -t test1:v1 ."
                 }
             }
         }
@@ -55,3 +56,4 @@ pipeline {
         }
     }
 }
+
