@@ -28,7 +28,6 @@ pipeline {
         }
         stage('部署到Kubernetes') {
             steps {
-            sh 'docker pull registry.cn-hangzhou.aliyuncs.com/test-devops1/devops:v1'
              sh 'kubectl apply -f application/deployment.yaml'
             }
         }
