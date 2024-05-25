@@ -10,14 +10,14 @@ pipeline {
 
         stage('构建Docker镜像') {
             steps {
-                sh 'docker build -t devops:v1 .'
+                sh 'docker build -t devops:v1.0 .'
             }
         }
         stage("推送镜像") {
             steps {
                 sh 'docker login --username=aliyun1489854349 registry.cn-hangzhou.aliyuncs.com --password=qing@aliyun2'
-                sh 'docker tag devops:v1 registry.cn-hangzhou.aliyuncs.com/test-devops1/devops:v1'
-                echo 'docker push registry.cn-hangzhou.aliyuncs.com/test-devops1/devops:2.0'
+                sh 'docker tag devops:v1.0 registry.cn-hangzhou.aliyuncs.com/test-devops1/devops:v1.0'
+                echo 'docker push registry.cn-hangzhou.aliyuncs.com/test-devops1/devops:v1.0'
             }
         }
         stage("配置k8s环境"){
