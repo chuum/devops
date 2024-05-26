@@ -16,8 +16,8 @@ pipeline {
         stage("推送镜像") {
             steps {
                 sh 'docker login --username=aliyun1489854349 registry.cn-hangzhou.aliyuncs.com --password=qing@aliyun2'
-                sh 'docker tag devops:test registry.cn-hangzhou.aliyuncs.com/test-devops1/devops:test'
-                echo 'docker push registry.cn-hangzhou.aliyuncs.com/test-devops1/devops:test'
+                sh 'docker tag devops:test registry.cn-hangzhou.aliyuncs.com/test-devops1/devops:test1'
+                echo 'docker push registry.cn-hangzhou.aliyuncs.com/test-devops1/devops:test1'
             }
         }
         stage("配置k8s环境"){
