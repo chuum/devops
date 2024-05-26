@@ -46,6 +46,6 @@ RUN set -eux; \
 
 # 声明服务端口
 EXPOSE 8084
-
+#v1
 # 需要运行的命令
 ENTRYPOINT ["/bluebell_app", "conf/config.yaml"]
